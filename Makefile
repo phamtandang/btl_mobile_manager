@@ -1,28 +1,52 @@
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Iinclude
-SRC_DIR = src
-BUILD_DIR = build
-TARGET = supermarket
+CC = g++
+CFLAGS = -Wall -std=c++11
+SRCDIR = src
+INCDIR = include
+OBJDIR = obj
+BINDIR = bin
 
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
+# Danh sách các file .cpp
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+# Tạo danh sách các file .o tương ứng
+OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
+# Tên file thực thi
+EXECUTABLE = $(BINDIR)/QuanLyCuaHang
 
-all: directory $(TARGET)
+# Tạo thư mục nếu chưa tồn tại
+$(shell mkdir -p $(OBJDIR) $(BINDIR))
 
-directory:
-	mkdir -p $(BUILD_DIR)
-	mkdir -p data
+# Rule mặc định
+all: $(EXECUTABLE)
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+# Link các file .o để tạo file thực thi
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Biên dịch các file .cpp thành .o
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
 
+# Clean: xóa tất cả các file được tạo ra
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(OBJDIR)/*.o $(EXECUTABLE)
 
-run: all
-	./$(TARGET)
+# Rebuild: clean và build lại
+rebuild: clean all
 
-.PHONY: all clean run directory
+# Phụ thuộc cho các file header
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/models.h $(INCDIR)/sanpham.h $(INCDIR)/khachhang.h $(INCDIR)/thongke.h $(INCDIR)/utils.h
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+$(OBJDIR)/sanpham.o: $(SRCDIR)/sanpham.cpp $(INCDIR)/sanpham.h $(INCDIR)/models.h $(INCDIR)/utils.h $(INCDIR)/constants.h
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+$(OBJDIR)/khachhang.o: $(SRCDIR)/khachhang.cpp $(INCDIR)/khachhang.h $(INCDIR)/models.h $(INCDIR)/utils.h $(INCDIR)/constants.h
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+$(OBJDIR)/thongke.o: $(SRCDIR)/thongke.cpp $(INCDIR)/thongke.h $(INCDIR)/models.h
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+$(OBJDIR)/utils.o: $(SRCDIR)/utils.cpp $(INCDIR)/utils.h
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+.PHONY: all clean rebuild

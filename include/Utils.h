@@ -2,35 +2,29 @@
 #define UTILS_H
 
 #include <string>
-#include <ctime>
-#include <sstream>
-#include <iomanip>
 
-class Utils {
-public:
-    // Get current date in format DD/MM/YYYY
-    static std::string getCurrentDate();
-    
-    // Generate ID with format prefix + number (padded with zeros)
-    static std::string generateId(const std::string& prefix, int num);
-    
-    // Clear screen (cross-platform)
-    static void clearScreen();
-    
-    // Display application header
-    static void displayHeader(const std::string& title);
-    
-    // Pause and wait for user to press Enter
-    static void pause();
-    
-    // Read a valid integer input within a range
-    static int getIntInput(int min, int max);
-    
-    // Read a valid double input within a range
-    static double getDoubleInput(double min, double max);
-    
-    // Confirm an action (returns true if confirmed)
-    static bool confirm(const std::string& message);
-};
+// Hàm nhập chuỗi với kiểm tra dữ liệu đầu vào
+std::string nhapChuoi(const std::string& thongBao);
+
+// Hàm nhập số nguyên với kiểm tra dữ liệu đầu vào
+int nhapSoNguyen(const std::string& thongBao);
+
+// Hàm nhập số thực với kiểm tra dữ liệu đầu vào
+double nhapSoThuc(const std::string& thongBao);
+
+// Hàm lấy ngày hiện tại
+std::string ngayHienTai();
+
+// Hàm hiển thị menu chính
+void hienThiMenuChinh();
+
+// Hàm hiển thị menu sản phẩm
+void hienThiMenuSanPham();
+
+// Hàm hiển thị menu khách hàng
+void hienThiMenuKhachHang();
+
+// Hàm hiển thị menu thống kê
+void hienThiMenuThongKe();
 
 #endif // UTILS_H

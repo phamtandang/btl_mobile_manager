@@ -1,275 +1,248 @@
+#include "../include/models.h"
+#include "../include/sanpham.h"
+#include "../include/khachhang.h"
+#include "../include/thongke.h"
+#include "../include/utils.h"
 #include <iostream>
-#include <string>
-#include "../include/SupermarketManager.h"
-#include "../include/Utils.h"
+#include <limits>
 
 using namespace std;
 
-// Function declarations
-void displayMainMenu();
-void productManagementMenu(SupermarketManager& manager);
-void customerManagementMenu(SupermarketManager& manager);
-void invoiceManagementMenu(SupermarketManager& manager);
-void statisticsMenu(SupermarketManager& manager);
+// Khai báo các biến toàn cục
+extern NodeSanPham* dsSanPham;
+extern NodeKhachHang* dsKhachHang;
 
+// Hàm để xử lý lựa chọn quản lý sản phẩm
+void xuLyQuanLySanPham() {
+    int luaChonSP;
+    
+    do {
+        system("cls"); // Xóa màn hình (Windows)
+        // Nếu dùng Linux/Mac, thay bằng system("clear");
+        
+        hienThiMenuSanPham();
+        cin >> luaChonSP;
+        
+        // Xử lý lỗi đầu vào
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Lựa chọn không hợp lệ. Vui lòng nhập số từ 0-7.\n";
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+            continue;
+        }
+        
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
+        switch (luaChonSP) {
+            case 1:
+                hienThiDanhSachSanPham(dsSanPham);
+                break;
+            case 2:
+                themSanPham(dsSanPham);
+                break;
+            case 3:
+                suaSanPham(dsSanPham);
+                break;
+            case 4:
+                xoaSanPham(dsSanPham);
+                break;
+            case 5:
+                timKiemSanPham(dsSanPham);
+                break;
+            case 6:
+                sapXepSanPham(dsSanPham);
+                break;
+            case 7:
+                thongKeSanPham(dsSanPham);
+                break;
+            case 0:
+                cout << "Quay lại menu chính.\n";
+                break;
+            default:
+                cout << "Lựa chọn không hợp lệ! Vui lòng chọn từ 0-7.\n";
+        }
+        
+        if (luaChonSP != 0) {
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+        }
+    } while (luaChonSP != 0);
+}
+
+// Hàm để xử lý lựa chọn quản lý khách hàng
+void xuLyQuanLyKhachHang() {
+    int luaChonKH;
+    
+    do {
+        system("cls"); // Xóa màn hình (Windows)
+        // Nếu dùng Linux/Mac, thay bằng system("clear");
+        
+        hienThiMenuKhachHang();
+        cin >> luaChonKH;
+        
+        // Xử lý lỗi đầu vào
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Lựa chọn không hợp lệ. Vui lòng nhập số từ 0-6.\n";
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+            continue;
+        }
+        
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
+        switch (luaChonKH) {
+            case 1:
+                hienThiDanhSachKhachHang(dsKhachHang);
+                break;
+            case 2:
+                themKhachHang(dsKhachHang);
+                break;
+            case 3:
+                suaKhachHang(dsKhachHang);
+                break;
+            case 4:
+                xoaKhachHang(dsKhachHang);
+                break;
+            case 5:
+                timKiemKhachHang(dsKhachHang);
+                break;
+            case 6:
+                sapXepKhachHang(dsKhachHang);
+                break;
+            case 0:
+                cout << "Quay lại menu chính.\n";
+                break;
+            default:
+                cout << "Lựa chọn không hợp lệ! Vui lòng chọn từ 0-6.\n";
+        }
+        
+        if (luaChonKH != 0) {
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+        }
+    } while (luaChonKH != 0);
+}
+
+// Hàm để xử lý lựa chọn thống kê
+void xuLyThongKe() {
+    int luaChonTK;
+    
+    do {
+        system("cls"); // Xóa màn hình (Windows)
+        // Nếu dùng Linux/Mac, thay bằng system("clear");
+        
+        hienThiMenuThongKe();
+        cin >> luaChonTK;
+        
+        // Xử lý lỗi đầu vào
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Lựa chọn không hợp lệ. Vui lòng nhập số từ 0-3.\n";
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+            continue;
+        }
+        
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
+        switch (luaChonTK) {
+            case 1:
+                thongKeVonNhap(dsSanPham);
+                break;
+            case 2:
+                thongKeTienBanRa(dsKhachHang);
+                break;
+            case 3:
+                thongKeTinhTrangCuaHang(dsSanPham, dsKhachHang);
+                break;
+            case 0:
+                cout << "Quay lại menu chính.\n";
+                break;
+            default:
+                cout << "Lựa chọn không hợp lệ! Vui lòng chọn từ 0-3.\n";
+        }
+        
+        if (luaChonTK != 0) {
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+        }
+    } while (luaChonTK != 0);
+}
+
+// Hàm giải phóng bộ nhớ
+void giaiPhongBoNho() {
+    // Giải phóng bộ nhớ danh sách sản phẩm
+    NodeSanPham* currentSP = dsSanPham;
+    while (currentSP != NULL) {
+        NodeSanPham* temp = currentSP;
+        currentSP = currentSP->next;
+        delete temp;
+    }
+    dsSanPham = NULL;
+    
+    // Giải phóng bộ nhớ danh sách khách hàng
+    NodeKhachHang* currentKH = dsKhachHang;
+    while (currentKH != NULL) {
+        NodeKhachHang* temp = currentKH;
+        currentKH = currentKH->next;
+        delete temp;
+    }
+    dsKhachHang = NULL;
+}
+
+// Hàm chính
 int main() {
-    // Create manager instance
-    SupermarketManager manager;
+    int luaChon;
     
-    // Load data from files
-    bool dataLoaded = manager.loadAllData();
-    if (!dataLoaded) {
-        cout << "Warning: Could not load all data files. Starting with empty data." << endl;
-        Utils::pause();
-    }
+    // Thêm dữ liệu mẫu (tùy chọn)
+    // themDuLieuMau();
     
-    bool running = true;
-    while (running) {
-        Utils::clearScreen();
-        displayMainMenu();
+    do {
+        system("cls"); // Xóa màn hình (Windows)
+        // Nếu dùng Linux/Mac, thay bằng system("clear");
         
-        int choice = Utils::getIntInput(0, 4);
+        hienThiMenuChinh();
+        cin >> luaChon;
         
-        switch (choice) {
+        // Xử lý lỗi đầu vào
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Lựa chọn không hợp lệ. Vui lòng nhập số từ 0-3.\n";
+            cout << "\nNhấn Enter để tiếp tục...";
+            cin.get();
+            continue;
+        }
+        
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
+        switch (luaChon) {
             case 1:
-                productManagementMenu(manager);
+                xuLyQuanLySanPham();
                 break;
             case 2:
-                customerManagementMenu(manager);
+                xuLyQuanLyKhachHang();
                 break;
             case 3:
-                invoiceManagementMenu(manager);
-                break;
-            case 4:
-                statisticsMenu(manager);
+                xuLyThongKe();
                 break;
             case 0:
-                if (Utils::confirm("Save all data before exiting?")) {
-                    manager.saveAllData();
-                }
-                running = false;
+                cout << "Cảm ơn bạn đã sử dụng phần mềm. Tạm biệt!\n";
                 break;
+            default:
+                cout << "Lựa chọn không hợp lệ! Vui lòng chọn từ 0-3.\n";
+                cout << "\nNhấn Enter để tiếp tục...";
+                cin.get();
         }
-    }
+    } while (luaChon != 0);
     
-    cout << "\nThank you for using Supermarket Management System!" << endl;
+    // Giải phóng bộ nhớ trước khi kết thúc chương trình
+    giaiPhongBoNho();
+    
     return 0;
-}
-
-// Display main menu
-void displayMainMenu() {
-    Utils::displayHeader("SUPERMARKET MANAGEMENT SYSTEM");
-    cout << "1. Product Management" << endl;
-    cout << "2. Customer Management" << endl;
-    cout << "3. Invoice Management" << endl;
-    cout << "4. Statistics & Reports" << endl;
-    cout << "0. Exit" << endl;
-    cout << "\nEnter your choice: ";
-}
-
-// Product management menu
-void productManagementMenu(SupermarketManager& manager) {
-    bool back = false;
-    
-    while (!back) {
-        Utils::clearScreen();
-        Utils::displayHeader("PRODUCT MANAGEMENT");
-        
-        cout << "1. Display All Products" << endl;
-        cout << "2. Add New Product" << endl;
-        cout << "3. Edit Product" << endl;
-        cout << "4. Delete Product" << endl;
-        cout << "5. Search Products" << endl;
-        cout << "6. Sort Products" << endl;
-        cout << "0. Back to Main Menu" << endl;
-        
-        cout << "\nEnter your choice: ";
-        int choice = Utils::getIntInput(0, 6);
-        
-        switch (choice) {
-            case 1:
-                Utils::clearScreen();
-                manager.displayAllProducts();
-                Utils::pause();
-                break;
-            case 2:
-                Utils::clearScreen();
-                manager.addProduct();
-                Utils::pause();
-                break;
-            case 3:
-                Utils::clearScreen();
-                manager.editProduct();
-                Utils::pause();
-                break;
-            case 4:
-                Utils::clearScreen();
-                manager.deleteProduct();
-                Utils::pause();
-                break;
-            case 5:
-                Utils::clearScreen();
-                manager.searchProducts();
-                Utils::pause();
-                break;
-            case 6:
-                Utils::clearScreen();
-                manager.sortProducts();
-                manager.displayAllProducts();
-                Utils::pause();
-                break;
-            case 0:
-                back = true;
-                break;
-        }
-    }
-}
-
-// Customer management menu
-void customerManagementMenu(SupermarketManager& manager) {
-    bool back = false;
-    
-    while (!back) {
-        Utils::clearScreen();
-        Utils::displayHeader("CUSTOMER MANAGEMENT");
-        
-        cout << "1. Display All Customers" << endl;
-        cout << "2. Add New Customer" << endl;
-        cout << "3. Edit Customer" << endl;
-        cout << "4. Delete Customer" << endl;
-        cout << "5. Search Customers" << endl;
-        cout << "6. Sort Customers" << endl;
-        cout << "0. Back to Main Menu" << endl;
-        
-        cout << "\nEnter your choice: ";
-        int choice = Utils::getIntInput(0, 6);
-        
-        switch (choice) {
-            case 1:
-                Utils::clearScreen();
-                manager.displayAllCustomers();
-                Utils::pause();
-                break;
-            case 2:
-                Utils::clearScreen();
-                manager.addCustomer();
-                Utils::pause();
-                break;
-            case 3:
-                Utils::clearScreen();
-                manager.editCustomer();
-                Utils::pause();
-                break;
-            case 4:
-                Utils::clearScreen();
-                manager.deleteCustomer();
-                Utils::pause();
-                break;
-            case 5:
-                Utils::clearScreen();
-                manager.searchCustomers();
-                Utils::pause();
-                break;
-            case 6:
-                Utils::clearScreen();
-                manager.sortCustomers();
-                manager.displayAllCustomers();
-                Utils::pause();
-                break;
-            case 0:
-                back = true;
-                break;
-        }
-    }
-}
-
-// Invoice management menu
-void invoiceManagementMenu(SupermarketManager& manager) {
-    bool back = false;
-    
-    while (!back) {
-        Utils::clearScreen();
-        Utils::displayHeader("INVOICE MANAGEMENT");
-        
-        cout << "1. Display All Invoices" << endl;
-        cout << "2. Create New Invoice" << endl;
-        cout << "3. Display Invoice Details" << endl;
-        cout << "4. Search Invoices" << endl;
-        cout << "5. Sort Invoices" << endl;
-        cout << "0. Back to Main Menu" << endl;
-        
-        cout << "\nEnter your choice: ";
-        int choice = Utils::getIntInput(0, 5);
-        
-        switch (choice) {
-            case 1:
-                Utils::clearScreen();
-                manager.displayAllInvoices();
-                Utils::pause();
-                break;
-            case 2:
-                Utils::clearScreen();
-                manager.createInvoice();
-                Utils::pause();
-                break;
-            case 3:
-                Utils::clearScreen();
-                manager.displayInvoice();
-                Utils::pause();
-                break;
-            case 4:
-                Utils::clearScreen();
-                manager.searchInvoices();
-                Utils::pause();
-                break;
-            case 5:
-                Utils::clearScreen();
-                manager.sortInvoices();
-                manager.displayAllInvoices();
-                Utils::pause();
-                break;
-            case 0:
-                back = true;
-                break;
-        }
-    }
-}
-
-// Statistics menu
-void statisticsMenu(SupermarketManager& manager) {
-    bool back = false;
-    
-    while (!back) {
-        Utils::clearScreen();
-        Utils::displayHeader("STATISTICS & REPORTS");
-        
-        cout << "1. Product Statistics" << endl;
-        cout << "2. Customer Statistics" << endl;
-        cout << "3. Sales Statistics" << endl;
-        cout << "0. Back to Main Menu" << endl;
-        
-        cout << "\nEnter your choice: ";
-        int choice = Utils::getIntInput(0, 3);
-        
-        switch (choice) {
-            case 1:
-                Utils::clearScreen();
-                manager.displayProductStatistics();
-                Utils::pause();
-                break;
-            case 2:
-                Utils::clearScreen();
-                manager.displayCustomerStatistics();
-                Utils::pause();
-                break;
-            case 3:
-                Utils::clearScreen();
-                manager.displayInvoiceStatistics();
-                Utils::pause();
-                break;
-            case 0:
-                back = true;
-                break;
-        }
-    }
 }

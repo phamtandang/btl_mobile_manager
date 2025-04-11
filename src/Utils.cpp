@@ -1,96 +1,121 @@
-#include "../include/Utils.h"
+#include "../include/utils.h"
 #include <iostream>
 #include <limits>
-#include <cctype>
+#include <ctime>
 
 using namespace std;
 
-// Get current date in format DD/MM/YYYY
-string Utils::getCurrentDate() {
+// Hàm nhập chuỗi với kiểm tra dữ liệu đầu vào
+string nhapChuoi(const string& thongBao) {
+    string input;
+    cout << thongBao;
+    getline(cin, input);
+    return input;
+}
+
+// Hàm nhập số nguyên với kiểm tra dữ liệu đầu vào
+int nhapSoNguyen(const string& thongBao) {
+    int input;
+    bool valid = false;
+    
+    do {
+        cout << thongBao;
+        cin >> input;
+        
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Lỗi: Vui lòng nhập một số nguyên hợp lệ.\n";
+        } else {
+            valid = true;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    } while (!valid);
+    
+    return input;
+}
+
+// Hàm nhập số thực với kiểm tra dữ liệu đầu vào
+double nhapSoThuc(const string& thongBao) {
+    double input;
+    bool valid = false;
+    
+    do {
+        cout << thongBao;
+        cin >> input;
+        
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Lỗi: Vui lòng nhập một số thực hợp lệ.\n";
+        } else {
+            valid = true;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    } while (!valid);
+    
+    return input;
+}
+
+// Hàm lấy ngày hiện tại
+string ngayHienTai() {
     time_t now = time(0);
-    struct tm* timeinfo = localtime(&now);
-    char buffer[11];
-    strftime(buffer, sizeof(buffer), "%d/%m/%Y", timeinfo);
-    return string(buffer);
+    tm *ltm = localtime(&now);
+    
+    string ngay = to_string(ltm->tm_mday);
+    string thang = to_string(1 + ltm->tm_mon);
+    string nam = to_string(1900 + ltm->tm_year);
+    
+    return ngay + "/" + thang + "/" + nam;
 }
 
-// Generate ID with format prefix + number (padded with zeros)
-string Utils::generateId(const string& prefix, int num) {
-    ostringstream oss;
-    oss << prefix << setw(4) << setfill('0') << num;
-    return oss.str();
+// Hàm hiển thị menu chính
+void hienThiMenuChinh() {
+    cout << "\n===== QUẢN LÝ CỬA HÀNG =====\n";
+    cout << "1. Quản lý Sản phẩm\n";
+    cout << "2. Quản lý Khách hàng\n";
+    cout << "3. Thống kê\n";
+    cout << "0. Thoát\n";
+    cout << "===========================\n";
+    cout << "Lựa chọn của bạn: ";
 }
 
-// Clear screen (cross-platform)
-void Utils::clearScreen() {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
+// Hàm hiển thị menu sản phẩm
+void hienThiMenuSanPham() {
+    cout << "\n===== QUẢN LÝ SẢN PHẨM =====\n";
+    cout << "1. Hiển thị danh sách sản phẩm\n";
+    cout << "2. Thêm sản phẩm\n";
+    cout << "3. Sửa thông tin sản phẩm\n";
+    cout << "4. Xóa sản phẩm\n";
+    cout << "5. Tìm kiếm sản phẩm\n";
+    cout << "6. Sắp xếp sản phẩm\n";
+    cout << "7. Thống kê sản phẩm\n";
+    cout << "0. Quay lại menu chính\n";
+    cout << "===========================\n";
+    cout << "Lựa chọn của bạn: ";
 }
 
-// Display application header
-void Utils::displayHeader(const string& title) {
-    cout << string(60, '=') << endl;
-    cout << setw(30 + title.length()/2) << title << endl;
-    cout << string(60, '=') << endl << endl;
+// Hàm hiển thị menu khách hàng
+void hienThiMenuKhachHang() {
+    cout << "\n===== QUẢN LÝ KHÁCH HÀNG =====\n";
+    cout << "1. Hiển thị danh sách khách hàng\n";
+    cout << "2. Thêm khách hàng\n";
+    cout << "3. Sửa thông tin khách hàng\n";
+    cout << "4. Xóa khách hàng\n";
+    cout << "5. Tìm kiếm khách hàng\n";
+    cout << "6. Sắp xếp khách hàng\n";
+    cout << "0. Quay lại menu chính\n";
+    cout << "===========================\n";
+    cout << "Lựa chọn của bạn: ";
 }
 
-// Pause and wait for user to press Enter
-void Utils::pause() {
-    cout << "\nPress Enter to continue...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
-}
-
-// Read a valid integer input within a range
-int Utils::getIntInput(int min, int max) {
-    int value;
-    while (true) {
-        cin >> value;
-        
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter a number: ";
-        }
-        else if (value < min || value > max) {
-            cout << "Please enter a number between " << min << " and " << max << ": ";
-        }
-        else {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return value;
-        }
-    }
-}
-
-// Read a valid double input within a range
-double Utils::getDoubleInput(double min, double max) {
-    double value;
-    while (true) {
-        cin >> value;
-        
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter a number: ";
-        }
-        else if (value < min || value > max) {
-            cout << "Please enter a number between " << min << " and " << max << ": ";
-        }
-        else {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return value;
-        }
-    }
-}
-
-// Confirm an action (returns true if confirmed)
-bool Utils::confirm(const string& message) {
-    cout << message << " (y/n): ";
-    char choice;
-    cin >> choice;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    return tolower(choice) == 'y';
+// Hàm hiển thị menu thống kê
+void hienThiMenuThongKe() {
+    cout << "\n===== THỐNG KÊ =====\n";
+    cout << "1. Số vốn nhập\n";
+    cout << "2. Số tiền bán ra\n";
+    cout << "3. Tình trạng cửa hàng\n";
+    cout << "0. Quay lại menu chính\n";
+    cout << "===========================\n";
+    cout << "Lựa chọn của bạn: ";
 }

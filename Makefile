@@ -1,52 +1,75 @@
-CC = g++
-CFLAGS = -Wall -std=c++11
-SRCDIR = src
-INCDIR = include
-OBJDIR = obj
-BINDIR = bin
+# Xác định môi trường và điều chỉnh cờ biên dịch phù hợp
+UNAME_S := $(shell uname -s)
 
-# Danh sách các file .cpp
-SOURCES = $(wildcard $(SRCDIR)/*.cpp)
-# Tạo danh sách các file .o tương ứng
-OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
-# Tên file thực thi
-EXECUTABLE = $(BINDIR)/QuanLyCuaHang
+ifeq ($(UNAME_S),Darwin)
+    # macOS sử dụng clang và không cần -lstdc++fs
+    CXX = clang++
+    CXXFLAGS = -Wall -Wextra -std=c++17 -I include
+    LDFLAGS = -stdlib=libc++
+else
+    # Linux/Windows sử dụng g++ và cần -lstdc++fs
+    CXX = g++
+    CXXFLAGS = -Wall -Wextra -std=c++17 -I include
+    LDFLAGS = -lstdc++fs
+endif
 
-# Tạo thư mục nếu chưa tồn tại
-$(shell mkdir -p $(OBJDIR) $(BINDIR))
+# Thư mục
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+DATA_DIR = data
 
-# Rule mặc định
-all: $(EXECUTABLE)
+# File
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+EXE = $(BIN_DIR)/store_management
 
-# Link các file .o để tạo file thực thi
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) $^ -o $@
+# Mục tiêu chính
+all: directories $(EXE)
 
-# Biên dịch các file .cpp thành .o
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+# Tạo thư mục nếu chưa có
+directories:
+	mkdir -p $(OBJ_DIR) $(BIN_DIR) $(DATA_DIR)
 
-# Clean: xóa tất cả các file được tạo ra
+# Tạo thực thi
+$(EXE): $(OBJ_FILES)
+	$(CXX) $^ -o $@ $(LDFLAGS)
+
+# Tạo các file object
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Các phụ thuộc
+$(OBJ_DIR)/main.o: $(SRC_DIR)/main.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/KhachHang.o: $(SRC_DIR)/KhachHang.cpp include/KhachHang.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/SanPham.o: $(SRC_DIR)/SanPham.cpp include/SanPham.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/QuanLyKhachHang.o: $(SRC_DIR)/QuanLyKhachHang.cpp include/QuanLyKhachHang.h include/KhachHang.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/QuanLySanPham.o: $(SRC_DIR)/QuanLySanPham.cpp include/QuanLySanPham.h include/SanPham.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/ThongKe.o: $(SRC_DIR)/ThongKe.cpp include/ThongKe.h include/QuanLyKhachHang.h include/QuanLySanPham.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/Utils.o: $(SRC_DIR)/Utils.cpp include/Utils.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/Menu.o: $(SRC_DIR)/Menu.cpp include/Menu.h include/QuanLyKhachHang.h include/QuanLySanPham.h include/ThongKe.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean
 clean:
-	rm -rf $(OBJDIR)/*.o $(EXECUTABLE)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-# Rebuild: clean và build lại
-rebuild: clean all
+# Chạy chương trình
+run: all
+	$(EXE)
 
-# Phụ thuộc cho các file header
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/models.h $(INCDIR)/sanpham.h $(INCDIR)/khachhang.h $(INCDIR)/thongke.h $(INCDIR)/utils.h
-	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
-
-$(OBJDIR)/sanpham.o: $(SRCDIR)/sanpham.cpp $(INCDIR)/sanpham.h $(INCDIR)/models.h $(INCDIR)/utils.h $(INCDIR)/constants.h
-	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
-
-$(OBJDIR)/khachhang.o: $(SRCDIR)/khachhang.cpp $(INCDIR)/khachhang.h $(INCDIR)/models.h $(INCDIR)/utils.h $(INCDIR)/constants.h
-	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
-
-$(OBJDIR)/thongke.o: $(SRCDIR)/thongke.cpp $(INCDIR)/thongke.h $(INCDIR)/models.h
-	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
-
-$(OBJDIR)/utils.o: $(SRCDIR)/utils.cpp $(INCDIR)/utils.h
-	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
-
-.PHONY: all clean rebuild
+.PHONY: all clean run directories

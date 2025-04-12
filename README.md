@@ -1,105 +1,125 @@
-# Quản Lý Cửa Hàng
+# Hệ Thống Quản Lý Cửa Hàng
 
-Đây là dự án quản lý cửa hàng được xây dựng bằng C++ sử dụng danh sách liên kết đơn để quản lý các đối tượng sản phẩm và khách hàng.
+Đây là ứng dụng quản lý cửa hàng được phát triển bằng C++, sử dụng cấu trúc dữ liệu danh sách liên kết để lưu trữ và quản lý thông tin về sản phẩm và khách hàng.
 
-## Cấu trúc dự án
+## Tính Năng
+
+* **Quản lý sản phẩm**: Thêm, sửa, xóa, tìm kiếm sản phẩm
+* **Quản lý khách hàng**: Thêm, sửa, xóa, tìm kiếm thông tin khách hàng
+* **Thống kê**: Theo dõi tình trạng cửa hàng, doanh thu, lãi/lỗ
+* **Tìm kiếm nâng cao**: Theo mã, tên, và nhiều tiêu chí khác
+* **Sắp xếp dữ liệu**: Theo nhiều tiêu chí khác nhau
+* **Lưu trữ dữ liệu**: Tự động lưu và đọc dữ liệu từ file
+
+## Cấu Trúc Dự Án
 
 ```
-QuanLyCuaHang/
+store_management/
 │
-├── include/                   # Thư mục chứa các file header
-│   ├── constants.h            # Các hằng số và định nghĩa chung
-│   ├── models.h               # Định nghĩa cấu trúc dữ liệu
-│   ├── sanpham.h              # Khai báo hàm liên quan đến sản phẩm
-│   ├── khachhang.h            # Khai báo hàm liên quan đến khách hàng
-│   ├── thongke.h              # Khai báo hàm thống kê
-│   └── utils.h                # Các tiện ích (nhập/xuất, xử lý ngày tháng)
+├── include/
+│   ├── KhachHang.h       // Định nghĩa lớp KhachHang và NodeKhachHang
+│   ├── SanPham.h         // Định nghĩa lớp SanPham và NodeSanPham
+│   ├── QuanLyKhachHang.h // Lớp quản lý danh sách liên kết khách hàng
+│   ├── QuanLySanPham.h   // Lớp quản lý danh sách liên kết sản phẩm
+│   ├── ThongKe.h         // Lớp thống kê
+│   ├── Utils.h           // Các hàm tiện ích
+│   └── Menu.h            // Lớp xử lý menu và giao diện
 │
-├── src/                       # Thư mục chứa các file nguồn
-│   ├── sanpham.cpp            # Triển khai quản lý sản phẩm
-│   ├── khachhang.cpp          # Triển khai quản lý khách hàng
-│   ├── thongke.cpp            # Triển khai thống kê
-│   ├── utils.cpp              # Triển khai các tiện ích
-│   └── main.cpp               # Chương trình chính
+├── src/
+│   ├── KhachHang.cpp       // Triển khai phương thức của lớp KhachHang
+│   ├── SanPham.cpp         // Triển khai phương thức của lớp SanPham
+│   ├── QuanLyKhachHang.cpp // Triển khai phương thức quản lý khách hàng
+│   ├── QuanLySanPham.cpp   // Triển khai phương thức quản lý sản phẩm
+│   ├── ThongKe.cpp         // Triển khai phương thức thống kê
+│   ├── Utils.cpp           // Triển khai các hàm tiện ích
+│   ├── Menu.cpp            // Triển khai phương thức menu
+│   └── main.cpp            // Chương trình chính
 │
-├── Makefile                   # File để biên dịch project
-│
-└── README.md                  # Tài liệu hướng dẫn
+└── data/
+    ├── khachhang.txt       // File lưu trữ dữ liệu khách hàng
+    └── sanpham.txt         // File lưu trữ dữ liệu sản phẩm
 ```
 
-## Chức năng
+## Yêu Cầu Hệ Thống
 
-### Quản lý Sản phẩm
-1. Hiển thị danh sách sản phẩm
-2. Thêm sản phẩm
-3. Sửa thông tin sản phẩm
-4. Xóa sản phẩm
-5. Tìm kiếm sản phẩm
-6. Sắp xếp sản phẩm
-7. Thống kê sản phẩm
+* Trình biên dịch C++ hỗ trợ chuẩn C++17 trở lên (g++, clang++)
+* Hệ điều hành: Windows, macOS, hoặc Linux
 
-### Quản lý Khách hàng
-1. Hiển thị danh sách khách hàng
-2. Thêm khách hàng
-3. Sửa thông tin khách hàng
-4. Xóa khách hàng
-5. Tìm kiếm khách hàng
-6. Sắp xếp khách hàng
+## Hướng Dẫn Cài Đặt
 
-### Thống kê
-1. Số vốn nhập
-2. Số tiền bán ra
-3. Tình trạng cửa hàng (lãi/lỗ)
+### Sử dụng Make
 
-## Cấu trúc dữ liệu
-
-Dự án sử dụng danh sách liên kết đơn để quản lý cả sản phẩm và khách hàng.
-
-### Sản phẩm
-- Mã sản phẩm
-- Tên sản phẩm
-- Mã nhà cung cấp
-- Tên nhà cung cấp
-- Ngày nhập
-- Số lượng
-- Đơn giá
-- Thành tiền
-
-### Khách hàng
-- Mã khách hàng
-- Tên khách hàng
-- Địa chỉ
-- Số điện thoại
-- Ngày sinh
-- Mặt hàng mua
-- Số lượng
-- Thành tiền
-- Ngày giao dịch
-
-## Cách biên dịch và chạy
-
-1. Tạo thư mục `obj` và `bin` trong thư mục gốc của dự án:
-   ```
-   mkdir -p obj bin
-   ```
-
-2. Biên dịch dự án bằng lệnh:
+1. Clone repository về máy của bạn
+2. Di chuyển đến thư mục dự án
+3. Chạy lệnh biên dịch:
    ```
    make
    ```
-
-3. Chạy chương trình:
+4. Chạy chương trình:
    ```
-   ./bin/QuanLyCuaHang
-   ```
-
-4. Để clean và build lại:
-   ```
-   make rebuild
+   make run
    ```
 
-## Thuật toán được sử dụng
-- Thuật toán duyệt danh sách (Traversal)
-- Thuật toán tìm kiếm tuyến tính (Linear Search)
-- Thuật toán sắp xếp (Bubble Sort)
-- Thuật toán tính tổng và thống kê
+### Biên dịch thủ công
+
+```bash
+# Tạo thư mục
+mkdir -p obj bin data
+
+# Biên dịch
+g++ -std=c++17 -I include -c src/*.cpp -o obj/
+g++ obj/*.o -o bin/store_management
+
+# Chạy chương trình
+./bin/store_management
+```
+
+## Hướng Dẫn Sử Dụng
+
+Khi chạy chương trình, bạn sẽ thấy menu chính với các tùy chọn sau:
+
+```
+=============== QUẢN LÝ CỬA HÀNG ===============
+1. Quản lý sản phẩm
+2. Quản lý khách hàng
+3. Thống kê
+0. Thoát
+------------------------------------------------------
+Nhập lựa chọn:
+```
+
+### Quản Lý Sản Phẩm
+
+Cho phép thêm, sửa, xóa, tìm kiếm và hiển thị thông tin sản phẩm.
+
+### Quản Lý Khách Hàng
+
+Cho phép thêm, sửa, xóa, tìm kiếm và hiển thị thông tin khách hàng.
+
+### Thống Kê
+
+Cung cấp các báo cáo thống kê như tình trạng cửa hàng, sản phẩm bán chạy, doanh thu theo thời gian.
+
+## Quản Lý Dữ Liệu
+
+Dữ liệu được lưu trữ trong các file txt trong thư mục `data/`:
+- `sanpham.txt`: Thông tin về sản phẩm
+- `khachhang.txt`: Thông tin về khách hàng
+
+Dữ liệu được tự động lưu khi thoát chương trình và đọc khi khởi động.
+
+## Xử Lý Lỗi
+
+Ứng dụng bao gồm xử lý lỗi cơ bản như:
+- Kiểm tra dữ liệu đầu vào
+- Xử lý các trường hợp không tìm thấy dữ liệu
+- Báo lỗi khi thao tác với file không thành công
+
+## Những Người Đóng Góp
+
+- [Tên của bạn] - Phát triển chính
+- [Tên thành viên khác] - Thiết kế và kiểm thử
+
+## Giấy Phép
+
+Dự án được phân phối dưới giấy phép [loại giấy phép]. Xem file `LICENSE` để biết thêm chi tiết.
